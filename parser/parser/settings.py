@@ -29,8 +29,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-## superuser = abc
-## paww = 1234546789QQqq
 
 # Application definition
 

@@ -31,10 +31,16 @@ class HubViewSet(viewsets.ModelViewSet):
 def parse_habr(request):
 
     if request.method == 'GET':
-        logger.info('Hello!')
-        list_hubs = Hub.objects.all().values('hub_name', 'hub_link')
-        pars = ParserHub()
-        pars(list_hubs)
-        return Response({'ok': 200})
+
+        try:
+
+            list_hubs = Hub.objects.all().values('hub_name', 'hub_link')
+            pars = ParserHub()
+            pars(list_hubs)
+            return Response({'Hub data was parsed and inserted into db successfully': 200})
+
+        except:
+            return Response({'Internal Server Error': 500})
+
     else:
-        return Response({'This method is not allowed' : 405})
+        return Response({'This method is not allowed': 405})
