@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from pythonjsonlogger import jsonlogger
+from .logging_formatters import CustomJsonFormatter
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +42,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "parser_habr.apps.ParserHabrConfig",
-    "rest_framework"
+    "rest_framework",
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +128,38 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": True,
+
+    'formatters': {
+        'main_formatter': {
+            'format': "{asctime} - {levelname} - {module} - {message}",
+            "style": "{",
+        },
+        'json_formatter': {
+              '()': CustomJsonFormatter,
+        }
+    },
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "main_formatter",
+        },
+        'file': {
+                'class': 'logging.FileHandler',
+                'filename': 'info.log',
+                'formatter': 'json_formatter',
+        }
+    },
+
+    "loggers": {
+        "main": {
+            "handlers": ["file", "console"],
+            "propagate": True,
+            "level": "INFO",
+        },
+    },
+}

@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-    path('task', views.task, name='task'),
+    path('parse_habr', views.parse_habr, name='parse_habr'),
 ]

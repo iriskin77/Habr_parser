@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from parser_habr.views import AuthorViewSet, HubViewSet, TextsViewSet
+from .swagger import urlpatterns as swagger_urls
 
 router_authors = routers.DefaultRouter()
 router_authors.register(r'authors', AuthorViewSet)
@@ -30,8 +31,10 @@ router_texts.register(r'texts', TextsViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', include('parser_habr.urls')),
-    path('api/', include(router_authors.urls), name='list_authors'),
-    path('api/', include(router_hubs.urls), name='list_hubs'),
-    path('api/', include(router_texts.urls), name='list_texts'),
+    path('api/v1/', include('parser_habr.urls')),
+    path('api/v1/', include(router_authors.urls), name='list_authors'),
+    path('api/v1/', include(router_hubs.urls), name='list_hubs'),
+    path('api/v1/', include(router_texts.urls), name='list_texts'),
 ]
+
+urlpatterns += swagger_urls
