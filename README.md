@@ -29,7 +29,7 @@ Description api by swagger: http://127.0.0.1:8000/swagger/
 
 The api makes a request to habr.com, takes the necessary data, adds it to the database
 
-![Текст с описанием картинки](https://github.com/iriskin77/Habr_parser_api/api.png)
+![](https://github.com/iriskin77/Habr_parser_api/blob/master/api.png)
 
 ### How parser works
 
@@ -38,5 +38,5 @@ The parser makes a request to a hub link, then takes all article links which are
 After that the parser makes simultaneous asynchronous requests to all article links, takes data, puts into db. 
 Then this cicle repeats until hub links runs out.
 
-![Текст с описанием картинки](https://github.com/iriskin77/Habr_parser_api/parser.png)
+![](https://github.com/iriskin77/Habr_parser_api/blob/master/parser.png)
 
