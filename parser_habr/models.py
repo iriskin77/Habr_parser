@@ -2,19 +2,24 @@ from django.db import models
 
 # Create your models here.
 
-class Timer(models.Model):
-    """"Таблица для таймера для периода обхода"""""
-    minutes = models.IntegerField()
+class Task(models.Model):
+    """"Celery task table"""""
+    celery_task_id = models.CharField(max_length=1001, verbose_name='id celery')
+    is_success = models.BooleanField(default=False, verbose_name='Статус задачи')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.minutes)
+        return self.celery_task_id
 
     class Meta:
-        verbose_name = "Период обхода хабов"
-        verbose_name_plural = "Период обхода хабов"
+        verbose_name = "Задачи"
+        verbose_name_plural = "Задачи"
+
 
 class Hub(models.Model):
-    """"Таблица для хабов"""""
+    """"Hubs table"""""
+    task_id = models.ForeignKey(Task, blank=True, null=True, on_delete=models.PROTECT)
     hub_name = models.CharField(max_length=255, verbose_name='Название хаба')
     hub_link = models.URLField(max_length=10000, verbose_name='Ссылка на хаб')
 
@@ -26,7 +31,7 @@ class Hub(models.Model):
         verbose_name_plural = "Хабы"
 
 class Texts(models.Model):
-    """"Таблица для статей с каждого хаба"""""
+    """"Texts table from every Hub"""""
     hub = models.ForeignKey(Hub, on_delete=models.CASCADE, verbose_name='Название хаба')
     author = models.ForeignKey("Author", on_delete=models.CASCADE, verbose_name='Автор статьи')
     title = models.CharField(max_length=10000, verbose_name='Заголовок')
@@ -42,7 +47,7 @@ class Texts(models.Model):
         verbose_name_plural = "Статьи"
 
 class Author(models.Model):
-    """"Таблица для авторов"""""
+    """"Authors table"""""
     author = models.CharField(max_length=255, verbose_name='Автор статьи')
     author_link = models.URLField(max_length=10000, verbose_name='Ссылка на автора')
 
@@ -52,5 +57,17 @@ class Author(models.Model):
     class Meta:
         verbose_name = "Автор"
         verbose_name_plural = "Авторы"
+
+
+class Timer(models.Model):
+    """"Таблица для таймера для периода обхода"""""
+    minutes = models.IntegerField()
+
+    def __str__(self):
+        return str(self.minutes)
+
+    class Meta:
+        verbose_name = "Период обхода хабов"
+        verbose_name_plural = "Период обхода хабов"
 
 

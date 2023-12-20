@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hub, Author, Texts
+from .models import Hub, Author, Texts, Task
 
 
 class TextsSerializer(serializers.ModelSerializer):
@@ -9,6 +9,7 @@ class TextsSerializer(serializers.ModelSerializer):
         model = Texts
         fields = '__all__'
 
+
 class Authorerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -16,9 +17,17 @@ class Authorerializer(serializers.ModelSerializer):
         model = Author
         fields = '__all__'
 
+
 class HubSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Hub
+        fields = '__all__'
+
+
+class TaskSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Task
         fields = '__all__'

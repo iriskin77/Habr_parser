@@ -1,7 +1,15 @@
 from django.contrib import admin
-from .models import Timer, Hub, Texts, Author
+from .models import Timer, Hub, Texts, Author, Task
 
 # Register your models here.
+
+
+@admin.register(Task)
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('id', 'celery_task_id', 'is_success', 'created_at')
+    readonly_fields = ('created_at',)
+    list_filter = ('is_success',)
+
 
 @admin.register(Texts)
 class HabrTextsAdmin(admin.ModelAdmin):
@@ -16,6 +24,7 @@ class HabrTextsAdmin(admin.ModelAdmin):
     @admin.display(description='Описание')
     def brief_info(self, text: Texts):
         return f'Количество символов: {len(text.text)}'
+
 
 @admin.register(Author)
 class HabrAuthorAdmin(admin.ModelAdmin):

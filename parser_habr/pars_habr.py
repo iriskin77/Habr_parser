@@ -1,11 +1,12 @@
-from bs4 import BeautifulSoup
+import logging
 import requests
 import aiohttp
 import asyncio
+from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from aiohttp_retry import RetryClient, ExponentialRetry
-from .models import Texts, Author, Hub
-import logging
+from .models import Texts, Author, Hub, Task
+
 
 headers = {
         # 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
@@ -101,7 +102,8 @@ class ParserHub:
         except Exception as ex:
             self.logger.info(f'Fn {self.collect_info_articles.__name__}. Failed to collect info from articles of a hub. Message: {ex}')
 
-    def __call__(self, list_hubs: str) -> None:
+    def __call__(self, celery_task_id: str, list_hubs: str) -> None:
+        new_task = Task.objects.create(celery_task_id=celery_task_id)
         for hub_item in list(list_hubs):
             name = hub_item['hub_name']
             link = hub_item['hub_link']
@@ -112,6 +114,8 @@ class ParserHub:
             # insert into db
             self.db.insert_authors(self.hub_dict)
             self.db.insert_articles(self.hub_dict)
+        new_task.is_success = True
+        new_task.save()
 
 
 class Database:
