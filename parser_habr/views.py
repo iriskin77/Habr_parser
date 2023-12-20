@@ -5,11 +5,17 @@ from rest_framework import viewsets
 from celery.result import AsyncResult
 from .permissions import IsAdminOrReadOnly
 from .models import Hub, Timer, Author, Texts, Task
-from .serializer import TextsSerializer, Authorerializer, HubSerializer
+from .serializer import TextsSerializer, Authorerializer, HubSerializer, TaskSerializer
 from .tasks import collect_data
 
 
 logger = logging.getLogger('main')
+
+class TaskViewSet(viewsets.ModelViewSet):
+
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = (IsAdminOrReadOnly, )
 
 class TextsViewSet(viewsets.ModelViewSet):
 

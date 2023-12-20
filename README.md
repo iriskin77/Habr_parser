@@ -2,14 +2,14 @@
 
 ## How to install
 
-You can install it as a python script
+You can install it as a python script:
 
 + Clone the repo
 
 + Install virtual environment:
   + python -m venv venv
   + .\venv\Scripts\activate (for windows)
-  + venv/biv/activate (for linux)
+  + source venv/biv/activate (for linux)
 
 + Install dependencies: pip install -r requirements.txt
 
@@ -19,7 +19,9 @@ You can install it as a python script
 
 + Create superuser and add links to hubs to db using the admin panel
 
-+ To parse data, make a request to this url: http://127.0.0.1:8000/parse_habr
++ Install Celery and Redis
+
++ To parse data, make a request (POST) to this url: http://127.0.0.1:8000/parse_habr
 
 Description api by swagger: http://127.0.0.1:8000/swagger/
 
@@ -27,9 +29,7 @@ Description api by swagger: http://127.0.0.1:8000/swagger/
 
 #### How api works
 
-The api makes a request to habr.com, takes the necessary data, adds it to the database
-
-![](https://github.com/iriskin77/Habr_parser_api/blob/master/images/api_works.png)
+![](https://github.com/iriskin77/Habr_parser_api/blob/master/images/pars_habr_celery_redis.png)
 
 #### How parser works
 
@@ -41,6 +41,4 @@ Then this cicle repeats until hub links runs out.
 ![](https://github.com/iriskin77/Habr_parser_api/blob/master/images/parser.png)
 
 ## Notes 
-
-Redis, Celery
 

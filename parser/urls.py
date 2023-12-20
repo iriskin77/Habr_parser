@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from parser_habr.views import AuthorViewSet, HubViewSet, TextsViewSet
+from parser_habr.views import AuthorViewSet, HubViewSet, TextsViewSet, TaskViewSet
 from .swagger import urlpatterns as swagger_urls
 
 router_authors = routers.DefaultRouter()
@@ -29,12 +29,16 @@ router_hubs.register(r'hubs', HubViewSet)
 router_texts = routers.DefaultRouter()
 router_texts.register(r'texts', TextsViewSet)
 
+router_tasks = routers.DefaultRouter()
+router_tasks.register(r'tasks', TaskViewSet)
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/v1/', include('parser_habr.urls')),
     path('api/v1/', include(router_authors.urls), name='list_authors'),
     path('api/v1/', include(router_hubs.urls), name='list_hubs'),
     path('api/v1/', include(router_texts.urls), name='list_texts'),
+    path('api/v1/', include(router_tasks.urls), name='list_tasks'),
 ]
 
 urlpatterns += swagger_urls
