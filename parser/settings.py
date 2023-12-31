@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "parser_habr.apps.ParserHabrConfig",
+    "apps.parser_habr",
+    "apps.parser_tink",
+    "apps.parser_mel",
     "rest_framework",
     'drf_yasg',
 ]

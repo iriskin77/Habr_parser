@@ -4,9 +4,9 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from celery.result import AsyncResult
 from .permissions import IsAdminOrReadOnly
-from .models import Hub, Timer, Author, Texts, Task
-from .serializer import TextsSerializer, Authorerializer, HubSerializer, TaskSerializer
-from .tasks import collect_data
+from .models import Category, Author, Article, Task
+from .serializers import ArticlesSerializer, AuthorSerializer, CategorySerializer, TaskSerializer
+from .tasks import collect_data_tinkoff
 
 
 logger = logging.getLogger('main')
@@ -17,34 +17,34 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     permission_classes = (IsAdminOrReadOnly, )
 
-class TextsViewSet(viewsets.ModelViewSet):
+class ArticleViewSet(viewsets.ModelViewSet):
 
-    queryset = Texts.objects.all()
-    serializer_class = TextsSerializer
+    queryset = Article.objects.all()
+    serializer_class = ArticlesSerializer
     permission_classes = (IsAdminOrReadOnly, )
 
 class AuthorViewSet(viewsets.ModelViewSet):
 
     queryset = Author.objects.all()
-    serializer_class = Authorerializer
+    serializer_class = ArticlesSerializer
     permission_classes = (IsAdminOrReadOnly, )
 
-class HubViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(viewsets.ModelViewSet):
 
-    queryset = Hub.objects.all()
-    serializer_class = HubSerializer
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
     permission_classes = (IsAdminOrReadOnly, )
 
 @api_view(['POST'])
-def parse_habr(request):
+def parse_tink(request):
 
     if request.method == 'POST':
 
         try:
-            collect_data.delay()
+            collect_data_tinkoff.delay()
             task_id = Task.objects.all().last().id
             task_id_celery = Task.objects.all().last().celery_task_id
-            return Response({'Task was created': 200, 'Task_id': task_id, 'Task_id_celery': task_id_celery})
+            return Response({'Task was created': 201, 'Task_id': task_id, 'Task_id_celery': task_id_celery})
 
         except:
 

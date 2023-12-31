@@ -17,28 +17,26 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from parser_habr.views import AuthorViewSet, HubViewSet, TextsViewSet, TaskViewSet
+from apps.parser_mel.urls import router as tink_router
+from apps.parser_tink.urls import router as mel_router
+from apps.parser_habr.urls import router as habr_router
 from .swagger import urlpatterns as swagger_urls
 
-router_authors = routers.DefaultRouter()
-router_authors.register(r'authors', AuthorViewSet)
+router = routers.DefaultRouter()
 
-router_hubs = routers.DefaultRouter()
-router_hubs.register(r'hubs', HubViewSet)
-
-router_texts = routers.DefaultRouter()
-router_texts.register(r'texts', TextsViewSet)
-
-router_tasks = routers.DefaultRouter()
-router_tasks.register(r'tasks', TaskViewSet)
+router.registry.extend(tink_router.registry)
+router.registry.extend(mel_router.registry)
+router.registry.extend(habr_router.registry)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('api/v1/', include('parser_habr.urls')),
-    path('api/v1/', include(router_authors.urls), name='list_authors'),
-    path('api/v1/', include(router_hubs.urls), name='list_hubs'),
-    path('api/v1/', include(router_texts.urls), name='list_texts'),
-    path('api/v1/', include(router_tasks.urls), name='list_tasks'),
+    path('api/v1/', include('apps.parser_habr.urls')),
+    path('api/v1/', include('apps.parser_tink.urls')),
+    path('api/v1/', include((router.urls, 'api'), namespace='api')),
+    # path('api/v1/', include(router_authors.urls), name='list_authors'),
+    # path('api/v1/', include(router_hubs.urls), name='list_hubs'),
+    # path('api/v1/', include(router_texts.urls), name='list_texts'),
+    # path('api/v1/', include(router_tasks.urls), name='list_tasks'),
 ]
 
 urlpatterns += swagger_urls

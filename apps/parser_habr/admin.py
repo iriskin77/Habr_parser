@@ -45,5 +45,4 @@ class HabrAuthorAdmin(admin.ModelAdmin):
     list_per_page = 40
     search_fields = ('hub_name',)
 
-admin.site.register(Timer)
 

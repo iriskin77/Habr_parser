@@ -5,7 +5,8 @@ import asyncio
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from aiohttp_retry import RetryClient, ExponentialRetry
-from .models import Texts, Author, Hub, Task
+from apps.parser_habr.models import Task
+from .database import Database
 
 
 headers = {
@@ -111,6 +112,7 @@ class ParserHub:
             # we collect all articles from a hub and put them in json
             links_pages = self.get_links_article(url_hub=link, headers=headers)
             asyncio.run(self.collect_info_articles(lst_links=links_pages, hub_name=name, hub_link=link))
+            print(self.hub_dict)
             # insert into db
             self.db.insert_authors(self.hub_dict)
             self.db.insert_articles(self.hub_dict)
@@ -118,49 +120,4 @@ class ParserHub:
         new_task.save()
 
 
-class Database:
 
-    def __init__(self):
-        self.logger = logging.getLogger('main')
-
-    def insert_authors(self, json_articles: dict) -> None:
-        """"Input: json with all articles from a hub. Output: the function inserts author-name and author-link in db"""""
-
-        self.logger.info(f'Fn {self.insert_authors.__name__} has started')
-
-        try:
-            for article in json_articles['Hub_articles']:
-                author_check = Author.objects.filter(author=article['author']).exists()
-                if author_check == False:
-                    Author.objects.create(author=article['author'], author_link=article['author_link']).save()
-
-            self.logger.info(f'Fn {self.insert_authors.__name__}. Authors were inserted successfully')
-        except Exception as ex:
-            self.logger.critical(f'Fn {self.insert_authors.__name__}. Failed to insert authors. Message: {ex}')
-
-    def insert_articles(self, json_articles: dict) -> None:
-
-        """"Input: json with all articles from a hub. Output: the function inserts articles in db"""""
-
-        try:
-            for article in json_articles['Hub_articles']:
-
-                hub_name = Hub.objects.filter(hub_name=json_articles['Hub_name']).first()
-                author = Author.objects.filter(author=article['author']).first()
-
-                text_check = Texts.objects.filter(title=article['title']).exists()
-
-                if text_check == False:
-
-                    new_text = Texts.objects.create(
-                                         hub=hub_name,
-                                         author=author,
-                                         title=article['title'],
-                                         text=article['text'],
-                                         date=article['date'],
-                                         link=article['link_article']
-                    )
-                    new_text.save()
-            self.logger.info(f'Fn {self.insert_authors.__name__}. Articles were inserted successfully')
-        except Exception as ex:
-            self.logger.critical(f'Fn {self.insert_articles.__name__}. Failed to insert articles. Message: {ex}')

@@ -1,13 +1,12 @@
-from .models import Hub, Task
-from .pars_habr import ParserHub, Database
+from apps.parser_habr.parser.pars_habr import ParserHub
 from parser.celery import app
-from .models import Hub
+from apps.parser_habr.models import Hub
 
 
 #name='create_task', bind=True
 
 
-@app.task(name='create_task', bind=True)
+@app.task(name='create_task_habr', bind=True)
 def collect_data(self):
     #logger.info(f'Fn {create_task.__name__}. The task was created')
     #print('create_task works')
