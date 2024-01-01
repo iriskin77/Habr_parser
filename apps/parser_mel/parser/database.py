@@ -32,7 +32,6 @@ class Database:
 
                     new_text = Article.objects.create(
                                          category=cat_name,
-                                         author=author,
                                          title=article['title'],
                                          body=article['body'],
                                          date_published=article['date_published'],
