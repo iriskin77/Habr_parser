@@ -54,14 +54,14 @@ class ParserMel:
                     body = soup.find('div', class_="b-pb-publication-body b-pb-publication-body_pablo").get_text(strip=True)
                     date = soup.find('div', class_="publication-header__publication-date").get_text(strip=True)
 
-                    self.mel_dict["Mel_Article"].append({
+                    self.mel_dict["Mel_articles"].append({
                         'title': title,
                         'body': body,
                         'link_article': link,
                         'date_published': date,
                     })
         except:
-            self.logger.warning(f'Fn get_articles. Failed to collect article data')
+            self.logger.warning(f'Fn collect_info_article. Failed to collect article data')
 
     async def collect_info_articles(self, links: list[str], head: dict, mel_cat: str, mel_cat_link: str) -> None:
         self.logger.info(f'Fn collect_info_articles has started')
@@ -71,7 +71,7 @@ class ParserMel:
             self.mel_dict["Mel_cat_link"] = mel_cat_link
             self.mel_dict["Mel_articles"] = []
 
-            async with aiohttp.ClientSession(headers=headers) as session:
+            async with aiohttp.ClientSession(headers=head) as session:
                 tasks = []
                 for link in links:
                     task = asyncio.create_task(self.collect_info_article(session=session, link=link, head=head))
@@ -91,6 +91,8 @@ class ParserMel:
 
                 links = self.get_articles(main_url=link_cat, head=headers)
                 asyncio.run(self.collect_info_articles(links, headers, name, link_cat))
+                self.db.insert_authors(self.mel_dict)
+                self.db.insert_articles(self.mel_dict)
 
             new_task.is_success = True
             new_task.save()
