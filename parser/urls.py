@@ -32,6 +32,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/v1/', include('apps.parser_habr.urls')),
     path('api/v1/', include('apps.parser_tink.urls')),
+    path('api/v1/', include('apps.parser_mel.urls')),
     path('api/v1/', include((router.urls, 'api'), namespace='api')),
     # path('api/v1/', include(router_authors.urls), name='list_authors'),
     # path('api/v1/', include(router_hubs.urls), name='list_hubs'),

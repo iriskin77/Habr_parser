@@ -3,6 +3,7 @@ import requests
 from aiohttp_retry import RetryClient, ExponentialRetry
 import aiohttp
 import asyncio
+from apps.parser_mel.models import Task
 
 headers = {
         # 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
@@ -63,10 +64,15 @@ class ParserMel:
                 tasks.append(task)
             await asyncio.gather(*tasks)
 
-    def __call__(self, dct) -> None:
-        for item in dct.items():
-            name = item[0]
-            link_cat = item[1]
+    def __call__(self, celery_task_id: str, list_cat: str) -> None:
+        new_task = Task.objects.create(celery_task_id=celery_task_id)
+        for item in list(list_cat):
+            name = item['name_cat']
+            link_cat = item['link_cat']
 
             links = self.get_articles(main_url=link_cat, head=headers)
             asyncio.run(self.collect_info_articles(links, headers, name, link_cat))
+            self.db.insert_authors(self.tink_dict)
+            self.db.insert_articles(self.tink_dict)
+        new_task.is_success = True
+        new_task.save()

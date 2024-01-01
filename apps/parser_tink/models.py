@@ -19,6 +19,7 @@ class Task(models.Model):
 class Category(models.Model):
     name_cat = models.CharField(max_length=255, verbose_name="Категория")
     link_cat = models.URLField(max_length=10000, verbose_name="Ссылка на категорию")
+    task_id = models.ForeignKey(Task, blank=True, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name_cat
