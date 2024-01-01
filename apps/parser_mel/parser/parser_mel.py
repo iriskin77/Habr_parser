@@ -10,26 +10,27 @@ headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
     }
 
-class Parser:
 
-    res_dict = []
+class ParserMel:
+
+    res_dict = {}
 
     main = "https://mel.fm"
 
-    def get_articles(self, main_url:str, headers: dict) -> list[str]:
-        resp = requests.get(url=main_url, headers=headers)
+    def get_articles(self, main_url: str, head: dict) -> list[str]:
+        resp = requests.get(url=main_url, headers=head)
         soup = BeautifulSoup(resp.text, "lxml")
         links = soup.find_all('a', class_="b-pb-article-card__link")
-        links_articles = [self.main + i["href"] for i in links]
+        links_articles = [self.main + link["href"] for link in links]
         return links_articles
 
-    async def collect_info_article(self, session, link, headers):
+    async def collect_info_article(self, session, link: str, head: dict) -> None:
 
         retry_options = ExponentialRetry(attempts=5)
         retry_client = RetryClient(raise_for_status=False, retry_options=retry_options, client_session=session, start_timeout=0.5)
 
         try:
-            async with retry_client.get(url=link, headers=headers) as response:
+            async with retry_client.get(url=link, headers=head) as response:
 
                 if response.ok:
 
@@ -40,27 +41,32 @@ class Parser:
                     body = soup.find('div', class_="b-pb-publication-body b-pb-publication-body_pablo").get_text(strip=True)
                     date = soup.find('div', class_="publication-header__publication-date").get_text(strip=True)
 
-                    self.res_dict.append({
+                    self.res_dict["Mel_Article"].append({
                         'title': title,
                         'body': body,
+                        'link_article': link,
                         'date_published': date,
                     })
         except:
             print("error")
 
-    async def collect_info_articles(self, links, headers):
+    async def collect_info_articles(self, links: list[str], head: dict, mel_cat: str, mel_cat_link: str) -> None:
+
+        self.res_dict["Mel_cat"] = mel_cat
+        self.res_dict["Mel_cat_link"] = mel_cat_link
+        self.res_dict["Mel_Article"] = []
+
         async with aiohttp.ClientSession(headers=headers) as session:
-                tasks = []
-                for link in links:
-                    task = asyncio.create_task(self.collect_info_article(session=session, link=link, headers=headers))
-                    tasks.append(task)
-                await asyncio.gather(*tasks)
+            tasks = []
+            for link in links:
+                task = asyncio.create_task(self.collect_info_article(session=session, link=link, head=head))
+                tasks.append(task)
+            await asyncio.gather(*tasks)
 
-obj = Parser()
-res = obj.get_articles(main_url="https://mel.fm/ucheba", headers=headers)
-asyncio.run(obj.collect_info_articles(res, headers))
+    def __call__(self, dct) -> None:
+        for item in dct.items():
+            name = item[0]
+            link_cat = item[1]
 
-print(obj.res_dict)
-
-
-
+            links = self.get_articles(main_url=link_cat, head=headers)
+            asyncio.run(self.collect_info_articles(links, headers, name, link_cat))
