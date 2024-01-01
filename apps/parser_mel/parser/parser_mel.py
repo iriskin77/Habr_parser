@@ -91,7 +91,6 @@ class ParserMel:
 
                 links = self.get_articles(main_url=link_cat, head=headers)
                 asyncio.run(self.collect_info_articles(links, headers, name, link_cat))
-                self.db.insert_authors(self.mel_dict)
                 self.db.insert_articles(self.mel_dict)
 
             new_task.is_success = True

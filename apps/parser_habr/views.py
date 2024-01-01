@@ -43,18 +43,7 @@ def parse_habr(request):
         try:
             collect_data.delay()
             task_id = Task.objects.all().last().id
-            print(task_id)
             task_id_celery = Task.objects.all().last().celery_task_id
-            print(task_id_celery)
-            list_hubs = Hub.objects.all().values('hub_name', 'hub_link')
-            print(list_hubs)
-            print(list(list_hubs))
-
-            for hub_item in list(list_hubs):
-                name = hub_item['hub_name']
-                print(name)
-                link = hub_item['hub_link']
-                print(link)
 
             return Response({'Task was created': 200, 'Task_id': task_id, 'Task_id_celery': task_id_celery})
 

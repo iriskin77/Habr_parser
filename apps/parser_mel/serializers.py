@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Author, Article, Task
+from .models import Category, Article, Task
 
 
 class ArticlesSerializer(serializers.ModelSerializer):
@@ -7,14 +7,6 @@ class ArticlesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = '__all__'
-
-
-class AuthorSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
-    class Meta:
-        model = Author
         fields = '__all__'
 
 

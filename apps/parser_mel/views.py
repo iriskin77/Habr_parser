@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from celery.result import AsyncResult
 from .permissions import IsAdminOrReadOnly
-from .models import Category, Author, Article, Task
-from .serializers import ArticlesSerializer, AuthorSerializer, CategorySerializer, TaskSerializer
+from .models import Category, Article, Task
+from .serializers import ArticlesSerializer, CategorySerializer, TaskSerializer
 from .tasks import collect_data_mel
 
 
@@ -23,11 +23,6 @@ class ArticleViewSet(viewsets.ModelViewSet):
     serializer_class = ArticlesSerializer
     permission_classes = (IsAdminOrReadOnly, )
 
-class AuthorViewSet(viewsets.ModelViewSet):
-
-    queryset = Author.objects.all()
-    serializer_class = ArticlesSerializer
-    permission_classes = (IsAdminOrReadOnly, )
 
 class CategoryViewSet(viewsets.ModelViewSet):
 

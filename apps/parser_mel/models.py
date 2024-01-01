@@ -29,16 +29,6 @@ class Category(models.Model):
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
 
-class Author(models.Model):
-    author = models.CharField(max_length=255, verbose_name="Авторы")
-    author_link = models.URLField(max_length=10000, verbose_name='Ссылка на автора')
-
-    def __str__(self):
-        return self.author
-
-    class Meta:
-        verbose_name = "Авторы"
-        verbose_name_plural = "Авторы"
 
 class Article(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
@@ -46,7 +36,6 @@ class Article(models.Model):
     date_published = models.CharField(max_length=255, verbose_name="Дата публикации")
     category = models.ForeignKey(Category, on_delete=models.PROTECT, verbose_name="Категория")
     link = models.URLField(max_length=10000, verbose_name="Ссылка на статью")
-    author = models.ForeignKey(Author, on_delete=models.PROTECT, verbose_name="Автор")
 
     def __str__(self):
         return self.title

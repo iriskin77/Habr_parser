@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Article, Author, Task
+from .models import Category, Article, Task
 
 # Register your models here.
 
@@ -14,22 +14,12 @@ class TaskAdmin(admin.ModelAdmin):
 @admin.register(Article)
 class MelArticlesAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'title', 'category','author', 'date_published')
+    list_display = ('id', 'title', 'category', 'date_published')
     list_display_links = ('title',)
-    ordering = ('id', 'title', 'category', 'author', 'date_published')
+    ordering = ('id', 'title', 'category', 'date_published')
     list_per_page = 40
-    search_fields = ('title', 'author__author', 'category__name_cat')
+    search_fields = ('title', 'category__name_cat')
     list_filter = ('category__name_cat',)
-
-
-@admin.register(Author)
-class MelAuthorAdmin(admin.ModelAdmin):
-
-    list_display = ('id', 'author', 'author_link')
-    list_display_links = ('author',)
-    ordering = ('id',)
-    list_per_page = 40
-    search_fields = ('author',)
 
 
 @admin.register(Category)
