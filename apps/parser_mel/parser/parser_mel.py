@@ -4,6 +4,8 @@ from aiohttp_retry import RetryClient, ExponentialRetry
 import aiohttp
 import asyncio
 from apps.parser_mel.models import Task
+from apps.parser_mel.parser.database import Database
+import logging
 
 headers = {
         # 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
@@ -14,16 +16,26 @@ headers = {
 
 class ParserMel:
 
-    res_dict = {}
+    mel_dict: dict = {}
 
-    main = "https://mel.fm"
+    main: str = "https://mel.fm"
+
+    def __init__(self):
+        self.db = Database()
+        self.logger = logging.getLogger('main')
+
 
     def get_articles(self, main_url: str, head: dict) -> list[str]:
-        resp = requests.get(url=main_url, headers=head)
-        soup = BeautifulSoup(resp.text, "lxml")
-        links = soup.find_all('a', class_="b-pb-article-card__link")
-        links_articles = [self.main + link["href"] for link in links]
-        return links_articles
+        self.logger.info(f'Fn get_articles has started')
+        try:
+            resp = requests.get(url=main_url, headers=head)
+            soup = BeautifulSoup(resp.text, "lxml")
+            links = soup.find_all('a', class_="b-pb-article-card__link")
+            links_articles = [self.main + link["href"] for link in links]
+            self.logger.critical(f'Fn get_articles has finished correctly')
+            return links_articles
+        except:
+            self.logger.critical(f'Fn get_articles has finished incorrectly')
 
     async def collect_info_article(self, session, link: str, head: dict) -> None:
 
@@ -42,37 +54,45 @@ class ParserMel:
                     body = soup.find('div', class_="b-pb-publication-body b-pb-publication-body_pablo").get_text(strip=True)
                     date = soup.find('div', class_="publication-header__publication-date").get_text(strip=True)
 
-                    self.res_dict["Mel_Article"].append({
+                    self.mel_dict["Mel_Article"].append({
                         'title': title,
                         'body': body,
                         'link_article': link,
                         'date_published': date,
                     })
         except:
-            print("error")
+            self.logger.warning(f'Fn get_articles. Failed to collect article data')
 
     async def collect_info_articles(self, links: list[str], head: dict, mel_cat: str, mel_cat_link: str) -> None:
+        self.logger.info(f'Fn collect_info_articles has started')
 
-        self.res_dict["Mel_cat"] = mel_cat
-        self.res_dict["Mel_cat_link"] = mel_cat_link
-        self.res_dict["Mel_Article"] = []
+        try:
+            self.mel_dict["Mel_cat"] = mel_cat
+            self.mel_dict["Mel_cat_link"] = mel_cat_link
+            self.mel_dict["Mel_articles"] = []
 
-        async with aiohttp.ClientSession(headers=headers) as session:
-            tasks = []
-            for link in links:
-                task = asyncio.create_task(self.collect_info_article(session=session, link=link, head=head))
-                tasks.append(task)
-            await asyncio.gather(*tasks)
+            async with aiohttp.ClientSession(headers=headers) as session:
+                tasks = []
+                for link in links:
+                    task = asyncio.create_task(self.collect_info_article(session=session, link=link, head=head))
+                    tasks.append(task)
+                await asyncio.gather(*tasks)
+            self.logger.info(f'Fn collect_info_articles has finished correctly')
+        except:
+            self.logger.critical(f'Fn collect_info_articles has finished incorrectly')
 
     def __call__(self, celery_task_id: str, list_cat: str) -> None:
-        new_task = Task.objects.create(celery_task_id=celery_task_id)
-        for item in list(list_cat):
-            name = item['name_cat']
-            link_cat = item['link_cat']
+        self.logger.info(f'Parser_mel has started')
+        try:
+            new_task = Task.objects.create(celery_task_id=celery_task_id)
+            for item in list(list_cat):
+                name = item['name_cat']
+                link_cat = item['link_cat']
 
-            links = self.get_articles(main_url=link_cat, head=headers)
-            asyncio.run(self.collect_info_articles(links, headers, name, link_cat))
-            self.db.insert_authors(self.tink_dict)
-            self.db.insert_articles(self.tink_dict)
-        new_task.is_success = True
-        new_task.save()
+                links = self.get_articles(main_url=link_cat, head=headers)
+                asyncio.run(self.collect_info_articles(links, headers, name, link_cat))
+
+            new_task.is_success = True
+            new_task.save()
+        except:
+            self.logger.info(f'Parser_mel has finished correctly')
