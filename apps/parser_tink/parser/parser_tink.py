@@ -1,18 +1,12 @@
-from bs4 import BeautifulSoup
 import requests
-from aiohttp_retry import RetryClient, ExponentialRetry
 import asyncio
 import aiohttp
+from bs4 import BeautifulSoup
+from aiohttp_retry import RetryClient, ExponentialRetry
 from apps.parser_tink.models import Task
 from apps.parser_tink.parser.database import Database
+from apps.parser_tink.parser.config import settings
 
-
-
-headers = {
-        # 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-        'Cookie': 'news_lang=ru; yandex_login=talcore; ys=udn.cDrQktC70LDQtNC40YHQu9Cw0LIg0JrQsNGA0L/QtdC90LrQvg%3D%3D#c_chck.3181849896; yandexuid=7355079031598165761; mda2_beacon=1672991591886; gdpr=0; _ym_uid=1668166334590200044; addruid=J16Al8s1i5J74M9S9pL5k1W1f9; Session_id=3:1684046607.5.0.1672991591876:1DI8uQ:15a.1.2:1|552541704.0.2|64:10009557.333765.bRabFjTPl-KB0YFwm7thxr4P1Eg; sessionid2=3:1684046607.5.0.1672991591876:1DI8uQ:15a.1.2:1|552541704.0.2|64:10009557.333765.fakesign0000000000000000000; tmr_lvid=25aa36deb66ec3f5fd31de74352c56df; tmr_lvidTS=1665515375244; _ym_d=1693207925; Zen-User-Data={%22zen-theme%22:%22light%22}; zen_sso_checked=1; rec-tech=true; _ym_isad=1; KIykI=1; crookie=GwkL3T35JZAFN7/LgkLy5B06+N//nBiHRavbYemTc3SQ283H5odlLAaFAbEviWDO04s3S8SNGtCpq/kPhcdHkItBFYI=; cmtchd=MTY5NjMwODI2NzIwOQ==; _yasc=NEEDPcWQa1OaQo640rfL6v+8e9D3HVcXi8nYWOEebBJActfjCMY2F5mAmVGLC8g6; bltsr=1; tmr_detect=1%7C1696312690921',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
-    }
 
 class Parser:
 
@@ -21,6 +15,7 @@ class Parser:
     tink_dict: dict = {}
     cat_articles: list = []
     db = Database()
+    head = settings.get_headers()
 
     def get_links_articles(self, main_url: str, headers: dict) -> list[str]:
         dct = {}
@@ -81,20 +76,11 @@ class Parser:
             link = item['link_cat']
 
             # we collect all articles from a hub and put them in json
-            links_pages = self.get_links_articles(main_url=link, headers=headers)
-            asyncio.run(self.collect_info_articles(links_articles=links_pages, cat_name=name, cat_link=link, headers=headers))
+            links_pages = self.get_links_articles(main_url=link, headers=self.head)
+            asyncio.run(self.collect_info_articles(links_articles=links_pages, cat_name=name, cat_link=link, headers=self.head))
             # insert into db
             self.db.insert_authors(self.tink_dict)
             self.db.insert_articles(self.tink_dict)
         new_task.is_success = True
         new_task.save()
-
-
-# obj = Parser()
-# res = obj.get_links_articles(main_url="https://journal.tinkoff.ru/flows/community-heroes", headers=headers)
-# print(res)
-# asyncio.run(obj.collect_info_articles(res, headers))
-#
-# print(obj.res_dict)
-
 
