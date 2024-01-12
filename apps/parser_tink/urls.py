@@ -13,6 +13,6 @@ app_name = 'parser_tink'
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('parse_tink', parse_tink, name='parse_tink'),
+    path('pars_tink', parse_tink, name='pars_tink'),
     path('get_task_info_tink', get_task_info, name='get_task_info_tink')
 ]

@@ -17,6 +17,6 @@ app_name = 'parser_habr'
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('parse_habr', views.parse_habr, name='parse_habr'),
+    path('pars_habr', views.parse_habr, name='pars_habr'),
     path('get_task_info_habr', views.get_task_info, name='get_task_info_habr')
 ]

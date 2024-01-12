@@ -13,6 +13,6 @@ app_name = 'parser_mel'
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('parse_mel', parse_mel, name='parse_mel'),
+    path('pars_mel', parse_mel, name='pars_mel'),
     path('get_task_info_mel', get_task_info_mel, name='get_task_info_mel')
 ]
