@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Timer, Hub, Texts, Author, Task
+from .models import Hub, Texts, Author, Task
 
 # Register your models here.
 
