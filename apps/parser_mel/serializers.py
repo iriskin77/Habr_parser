@@ -3,7 +3,6 @@ from .models import Category, Article, Task
 
 
 class ArticlesSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Article
@@ -11,7 +10,6 @@ class ArticlesSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Category
