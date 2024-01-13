@@ -2,14 +2,16 @@ import logging
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import viewsets
+from rest_framework.generics import ListAPIView
 from celery.result import AsyncResult
 from .permissions import IsAdminOrReadOnly
-from .models import Hub, Timer, Author, Texts, Task
+from .models import Hub, Author, Texts, Task
 from .serializer import TextsSerializer, Authorerializer, HubSerializer, TaskSerializer
 from .tasks import collect_data
 
 
 logger = logging.getLogger('main')
+
 
 class TaskViewSet(viewsets.ModelViewSet):
 
@@ -17,11 +19,13 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     permission_classes = (IsAdminOrReadOnly, )
 
+
 class TextsViewSet(viewsets.ModelViewSet):
 
     queryset = Texts.objects.all()
     serializer_class = TextsSerializer
     permission_classes = (IsAdminOrReadOnly, )
+
 
 class AuthorViewSet(viewsets.ModelViewSet):
 
@@ -29,11 +33,33 @@ class AuthorViewSet(viewsets.ModelViewSet):
     serializer_class = Authorerializer
     permission_classes = (IsAdminOrReadOnly, )
 
-class HubViewSet(viewsets.ModelViewSet):
+
+class ListApiHub(ListAPIView):
 
     queryset = Hub.objects.all()
     serializer_class = HubSerializer
     permission_classes = (IsAdminOrReadOnly, )
+
+
+@api_view(['POST'])
+def add_habr_category(request):
+
+    if request.method == 'POST':
+
+        serialized_data = HubSerializer(data=request.data)
+        if serialized_data.is_valid():
+            new_hub_name = serialized_data.validated_data['hub_name']
+            new_hub_link = serialized_data.validated_data['hub_link']
+            check_name = Hub.objects.filter(hub_name=new_hub_name).exists()
+            check_link = Hub.objects.filter(hub_name=new_hub_link).exists()
+            if not check_name and not check_link:
+                Hub.objects.create(hub_name=new_hub_name, hub_link=new_hub_link).save()
+                return Response({'status': 201, 'data': serialized_data.data})
+            else:
+                return Response({'status': 304})
+        else:
+            return Response({'error': serialized_data.errors})
+
 
 @api_view(['POST'])
 def parse_habr(request):
@@ -53,8 +79,9 @@ def parse_habr(request):
     else:
         return Response({'This method is not allowed': 405})
 
+
 @api_view(['GET'])
-def get_task_info(request):
+def get_task_habr_info(request):
 
     if request.method == 'GET':
 

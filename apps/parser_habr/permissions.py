@@ -7,3 +7,4 @@ class IsAdminOrReadOnly(BasePermission):
             return True
         else:
             return bool(request.user and request.user.is_staff)
+

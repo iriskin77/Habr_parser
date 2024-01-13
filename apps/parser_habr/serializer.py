@@ -11,7 +11,6 @@ class TextsSerializer(serializers.ModelSerializer):
 
 
 class Authorerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Author
@@ -19,7 +18,6 @@ class Authorerializer(serializers.ModelSerializer):
 
 
 class HubSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Hub
