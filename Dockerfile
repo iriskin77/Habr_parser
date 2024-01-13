@@ -10,7 +10,7 @@ COPY . .
 
 EXPOSE 8080
 
-#RUN chmod a+x /parser/start.sh
+RUN chmod a+x /parser/start.sh
 RUN chmod a+x /parser/celery_worker.sh
 
-#ENTRYPOINT ["./start.sh"]
+ENTRYPOINT ["./start.sh"]
