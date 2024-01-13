@@ -3,7 +3,6 @@ version: "3.9"
 services:
   web:
     build: .
-    command: python3 manage.py runserver
     ports:
       - '1234:1234'
 
@@ -24,17 +23,11 @@ services:
 
   redis:
     image: redis
+    container_name: redis
     restart: always
     volumes:
       - /path/to/local/dаta:/root/redis
       - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
     - "6379:6379"
-    container_name: redis
 
-#
-#volumes:
-#  postgres_data:
-#  redis:
-#  logging:
-#  static:
