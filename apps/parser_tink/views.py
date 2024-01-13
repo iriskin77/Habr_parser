@@ -72,9 +72,9 @@ def parse_tink(request):
             task_id_celery = Task.objects.all().last().celery_task_id
             return Response({'Task was created': 201, 'Task_id': task_id, 'Task_id_celery': task_id_celery})
 
-        except:
+        except Exception as ex:
 
-            return Response({'Internal Server Error': 500})
+            return Response({'Internal Server Error': 500, 'Error': str(ex)})
     else:
         return Response({'This method is not allowed': 405})
 

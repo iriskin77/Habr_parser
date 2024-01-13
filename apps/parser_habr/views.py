@@ -73,9 +73,8 @@ def parse_habr(request):
 
             return Response({'Task was created': 200, 'Task_id': task_id, 'Task_id_celery': task_id_celery})
 
-        except:
-
-            return Response({'Internal Server Error': 500})
+        except Exception as ex:
+            return Response({'Internal Server Error': 500, 'Error': str(ex)})
     else:
         return Response({'This method is not allowed': 405})
 
