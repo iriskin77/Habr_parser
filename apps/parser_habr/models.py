@@ -19,7 +19,6 @@ class Task(models.Model):
 
 class Hub(models.Model):
     """"Hubs table"""""
-    task_id = models.ForeignKey(Task, blank=True, null=True, on_delete=models.PROTECT)
     hub_name = models.CharField(max_length=255, verbose_name='Название хаба')
     hub_link = models.URLField(max_length=10000, verbose_name='Ссылка на хаб')
 
@@ -46,6 +45,7 @@ class Texts(models.Model):
         verbose_name = "Статья"
         verbose_name_plural = "Статьи"
 
+
 class Author(models.Model):
     """"Authors table"""""
     author = models.CharField(max_length=255, verbose_name='Автор статьи')
@@ -57,17 +57,3 @@ class Author(models.Model):
     class Meta:
         verbose_name = "Автор"
         verbose_name_plural = "Авторы"
-
-
-class Timer(models.Model):
-    """"Таблица для таймера для периода обхода"""""
-    minutes = models.IntegerField()
-
-    def __str__(self):
-        return str(self.minutes)
-
-    class Meta:
-        verbose_name = "Период обхода хабов"
-        verbose_name_plural = "Период обхода хабов"
-
-
