@@ -34,10 +34,5 @@ urlpatterns = [
     path('api/v1/', include('apps.parser_tink.urls')),
     path('api/v1/', include('apps.parser_mel.urls')),
     path('api/v1/', include((router.urls, 'api'), namespace='api')),
-    # path('api/v1/', include(router_authors.urls), name='list_authors'),
-    # path('api/v1/', include(router_hubs.urls), name='list_hubs'),
-    # path('api/v1/', include(router_texts.urls), name='list_texts'),
-    # path('api/v1/', include(router_tasks.urls), name='list_tasks'),
+    path('api/v1/', include(swagger_urls))
 ]
-
-urlpatterns += swagger_urls

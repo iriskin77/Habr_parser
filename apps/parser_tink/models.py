@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+
 class Task(models.Model):
     """"Celery task table"""""
     celery_task_id = models.CharField(max_length=1001, verbose_name='id celery')
@@ -16,10 +17,10 @@ class Task(models.Model):
         verbose_name = "Задачи"
         verbose_name_plural = "Задачи"
 
+
 class Category(models.Model):
     name_cat = models.CharField(max_length=255, verbose_name="Категория")
     link_cat = models.URLField(max_length=10000, verbose_name="Ссылка на категорию")
-    task_id = models.ForeignKey(Task, blank=True, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name_cat
@@ -27,6 +28,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
+
 
 class Author(models.Model):
     author = models.CharField(max_length=255, default=None, verbose_name="Авторы")
@@ -38,6 +40,7 @@ class Author(models.Model):
     class Meta:
         verbose_name = "Авторы"
         verbose_name_plural = "Авторы"
+
 
 class Article(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
