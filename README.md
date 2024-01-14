@@ -1,6 +1,6 @@
 ## What is this?
 
-The main idea is to create cron-parsers which can periodically collect new articles
+The main idea is to create parsers which can collect new articles
 from different sites using API. So, this project is an api (Django REST) for parsers that collect data (articles) from the following sites:
 
 + mel.fm https://mel.fm/
@@ -21,7 +21,6 @@ You can see it in the schema:
 
 ![](https://github.com/iriskin77/Habr_parser_api/blob/master/images/dj_pars.png)
 
-
 #### How parsers work
 
 All parsers work approximately in the same way. A parser receives a number of links to categories, for example,
@@ -32,28 +31,23 @@ consistently collects articles from each category. You can see it in the schema:
 
 ## How to use
 
-
-
 1) Add categories of a blog you want to parse into db using POST request. For example, it is possible to use for it
-requests or Postman. I prefer to use Postman
+requests or Postman. 
 
 ```python
 import requests
 
 url_api: str = "http://127.0.0.1:1234/api/v1/add_mel_category"
-data: dict = {
-             "name_cat": "Воспитание",
-             "link_cat": "https://mel.fm/vospitaniye"
-            }
+
+data: dict = {"name_cat": "Воспитание", "link_cat": "https://mel.fm/vospitaniye"}
 
 response = requests.post(url=url_api, data=data)
-print(response.status_code)
 
 ```
 If everything is okay, you will receive 201 status. 
 it means that your category has been successfully added into db.
 
-2) After that you can parse articles which is related to these categories using the following
+2) After that you can parse articles which are related to these categories using the following
 endpoints:
 
 POST request from the server runs the parsers:
@@ -71,11 +65,11 @@ If everything is okay you will receive the following answer from the server:
    }
 ```
 
-to GER information about the task you`ve created, use:
+to GET information about the task you`ve created, use:
 
-+ http://127.0.0.1:8000/api/v1/get_task_info_mel
-+ http://127.0.0.1:8000/api/v1/get_task_habr_info
-+ http://127.0.0.1:8000/api/v1/get_task_info_tink
++ http://127.0.0.1:1234/api/v1/get_task_info_mel
++ http://127.0.0.1:1234/api/v1/get_task_habr_info
++ http://127.0.0.1:1234/api/v1/get_task_info_tink
 
 ```json
    {
@@ -113,8 +107,6 @@ to GET parsed articles you can use the following endpoints:
         "author": 1
     }
   ]
-
-
 ```
 
 to GET parsed authors of articles you can use the following endpoints:
@@ -152,7 +144,7 @@ to GET parsed authors of articles you can use the following endpoints:
 
 ## How to install
 
-1) You can install it as a docker container:
+You can install it as a docker container:
 
 + Clone the repo
 
@@ -160,26 +152,7 @@ to GET parsed authors of articles you can use the following endpoints:
 
 After that the docker container will be created on the port 1234: http://127.0.0.1:1234
 
-2) You can also install it as a python script)))):
 
-+ Clone the repo
-
-+ Install virtual environment:
-  + python -m venv venv
-  + .\venv\Scripts\activate (for windows)
-  + source venv/biv/activate (for linux)
-
-+ Install dependencies: pip install -r requirements.txt
-
-+ Make migrations: python manage.py makemigrations
-
-+ Apply the migrations: python manage.py migrate
-
-+ Create superuser and add links to hubs to db using the admin panel
-
-+ Install Celery and Redis
-
-Description api by swagger: swagger/
 
 ## Notes 
 
