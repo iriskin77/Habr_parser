@@ -27,7 +27,7 @@ All parsers work approximately in the same way. A parser receives a number of li
 math/machine learning for the parser which parses habr.com or school/education for mel-parser. After that the parser
 consistently collects articles from each category. You can see it in the schema:
 
-![](https://github.com/iriskin77/Habr_parser_api/blob/master/images/parser.png)
+![](https://github.com/iriskin77/Habr_parser_api/blob/master/images/drf_api_parsers.png)
 
 ## How to use
 

@@ -26,7 +26,7 @@
 "машинное обучение" для парсера, который парсит habr.com, или школа/образование для парсера, который парсит mel.fm.
 После этого парсер последовательно обходит каждую категорию и собирает статьи. Визуально это выглядит следующим образом:
 
-![](https://github.com/iriskin77/Habr_parser_api/blob/master/images/parser.png)
+![](https://github.com/iriskin77/Habr_parser_api/blob/master/images/drf_api_parsers.png)
 
 ## Как этим пользоваться
 
