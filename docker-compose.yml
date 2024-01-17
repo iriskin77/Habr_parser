@@ -4,7 +4,7 @@ services:
   web:
     build: .
     volumes:
-      - ./db.sqlite3:/text_emotions/db.sqlite3
+      - ./db.sqlite3:/parser/db.sqlite3
       - ./info.log:/parser/info.log
     ports:
       - '1234:1234'
