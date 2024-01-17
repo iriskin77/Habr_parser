@@ -3,7 +3,9 @@ version: "3.9"
 services:
   web:
     build: .
-    #command: python3 manage.py runserver 0.0.0.0:1234
+    volumes:
+      - ./db.sqlite3:/text_emotions/db.sqlite3
+      - ./info.log:/parser/info.log
     ports:
       - '1234:1234'
 
@@ -26,7 +28,7 @@ services:
     image: mher/flower:0.9.7
     command: ['flower', '--broker=redis://redis:6379', '--port=5555']
     ports:
-      - 5557:5555
+      - "5557:5555"
     depends_on:
       - redis
 
