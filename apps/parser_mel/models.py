@@ -18,8 +18,8 @@ class Task(models.Model):
 
 
 class Category(models.Model):
-    name_cat = models.CharField(max_length=255, verbose_name="Категория")
-    link_cat = models.URLField(max_length=10000, verbose_name="Ссылка на категорию")
+    name_cat = models.CharField(max_length=255, unique=True, verbose_name="Категория")
+    link_cat = models.URLField(max_length=10000, unique=True, verbose_name="Ссылка на категорию")
 
     def __str__(self):
         return self.name_cat

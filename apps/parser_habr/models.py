@@ -19,8 +19,8 @@ class Task(models.Model):
 
 class Hub(models.Model):
     """"Hubs table"""""
-    hub_name = models.CharField(max_length=255, verbose_name='Название хаба')
-    hub_link = models.URLField(max_length=10000, verbose_name='Ссылка на хаб')
+    hub_name = models.CharField(max_length=255, unique=True, verbose_name='Название хаба')
+    hub_link = models.URLField(max_length=10000, unique=True, verbose_name='Ссылка на хаб')
 
     def __str__(self):
         return self.hub_name
