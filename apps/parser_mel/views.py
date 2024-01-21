@@ -41,15 +41,8 @@ def add_mel_category(request):
 
         serialized_data = CategorySerializer(data=request.data)
         if serialized_data.is_valid():
-            new_mel_name = serialized_data.validated_data['name_cat']
-            new_mel_link = serialized_data.validated_data['link_cat']
-            check_name = Category.objects.filter(name_cat=new_mel_name).exists()
-            check_link = Category.objects.filter(link_cat=new_mel_link).exists()
-            if not check_name and not check_link:
-                Category.objects.create(name_cat=new_mel_name, link_cat=new_mel_link).save()
-                return Response({'status': 201, 'data': serialized_data.data})
-            else:
-                return Response({'status': 304})
+            serialized_data.save()
+            return Response({'status': 201, 'data': serialized_data.data})
         else:
             return Response({'error': serialized_data.errors})
 

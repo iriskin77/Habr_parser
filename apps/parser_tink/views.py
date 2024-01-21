@@ -46,15 +46,8 @@ def add_tink_category(request):
 
         serialized_data = CategorySerializer(data=request.data)
         if serialized_data.is_valid():
-            new_tink_name = serialized_data.validated_data['name_cat']
-            new_tink_link = serialized_data.validated_data['link_cat']
-            check_name = Category.objects.filter(name_cat=new_tink_name).exists()
-            check_link = Category.objects.filter(link_cat=new_tink_link).exists()
-            if not check_name:
-                Category.objects.create(name_cat=new_tink_name, link_cat=new_tink_link).save()
-                return Response({'status': 201, 'data': serialized_data.data})
-            else:
-                return Response({'status': 304})
+            serialized_data.save()
+            return Response({'status': 201, 'data': serialized_data.data})
         else:
             return Response({'error': serialized_data.errors})
     else:

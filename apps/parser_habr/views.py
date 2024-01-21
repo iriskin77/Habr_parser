@@ -45,18 +45,10 @@ class ListApiHub(ListAPIView):
 def add_habr_category(request):
 
     if request.method == 'POST':
-
         serialized_data = HubSerializer(data=request.data)
         if serialized_data.is_valid():
-            new_hub_name = serialized_data.validated_data['hub_name']
-            new_hub_link = serialized_data.validated_data['hub_link']
-            check_name = Hub.objects.filter(hub_name=new_hub_name).exists()
-            check_link = Hub.objects.filter(hub_name=new_hub_link).exists()
-            if not check_name and not check_link:
-                Hub.objects.create(hub_name=new_hub_name, hub_link=new_hub_link).save()
-                return Response({'status': 201, 'data': serialized_data.data})
-            else:
-                return Response({'status': 304})
+            serialized_data.save()
+            return Response({'status': 201, 'data': serialized_data.data})
         else:
             return Response({'error': serialized_data.errors})
 
