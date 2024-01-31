@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework import routers
 from apps.parser_mel.urls import router as tink_router
 from apps.parser_tink.urls import router as mel_router
@@ -34,5 +34,7 @@ urlpatterns = [
     path('api/v1/', include('apps.parser_tink.urls')),
     path('api/v1/', include('apps.parser_mel.urls')),
     path('api/v1/', include((router.urls, 'api'), namespace='api')),
-    path('api/v1/', include(swagger_urls))
+    path('api/v1/', include(swagger_urls)),
+    path(r'api/v1/auth/', include('djoser.urls')),
+    re_path(r'^auth/', include('djoser.urls.authtoken'))
 ]
