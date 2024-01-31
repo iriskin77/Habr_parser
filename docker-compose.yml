@@ -6,6 +6,8 @@ services:
     volumes:
       - ./db.sqlite3:/parser/db.sqlite3
       - ./info.log:/parser/info.log
+    links:
+      - redis
     ports:
       - '1234:1234'
 
@@ -23,6 +25,23 @@ services:
     - redis
     depends_on:
     - redis
+
+  celery-beat:
+    build: .
+    container_name: celery-beat
+    entrypoint: celery
+    command: -A parser.celery beat --loglevel=info
+    environment:
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+    volumes:
+      - .:/var/www/app/beat
+    links:
+      - celery-worker
+      - redis
+    depends_on:
+      - celery-worker
+      - redis
 
   flower:
     image: mher/flower:0.9.7

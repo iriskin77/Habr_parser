@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 from .logging_formatters import CustomJsonFormatter
 from dotenv import load_dotenv
-
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -92,6 +92,11 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+        # "NAME": "files",
+        # "USER": "r2",
+        # "PASSWORD": "password",
+        # 'HOST': '127.0.0.1',
+        # "PORT": 5432,
     }
 }
 
@@ -137,11 +142,31 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# CELERY_BROKER_URL = "redis://redis:6379/0"
-# CELERY_RESULT_BACKEND = "redis://redis:6379/0"
 
 CELERY_BROKER_URL = "redis://redis:6379/0"
 CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+
+CELERY_BEAT_SCHEDULE = {
+      'pars-data-habr': {
+        'task': 'apps.parser_habr.tasks.collect_data_habr',
+        'schedule': crontab(minute='*/20'),
+    },
+    'pars-data-tinkoff': {
+        'task': 'apps.parser_habr.tasks.collect_data_tink',
+        'schedule': crontab(minute='*/20'),
+    },
+    'pars-data-mel': {
+        'task': 'apps.parser_habr.tasks.collect_data_mel',
+        'schedule': crontab(minute='*/20'),
+    },
+}
+
+
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
+REST_FRAMEWORK = {}
 
 
 LOGGING = {
