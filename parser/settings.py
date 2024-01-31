@@ -152,11 +152,11 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/20'),
     },
     'pars-data-tinkoff': {
-        'task': 'apps.parser_habr.tasks.collect_data_tink',
+        'task': 'apps.parser_mel.tasks.collect_data_mel',
         'schedule': crontab(minute='*/20'),
     },
     'pars-data-mel': {
-        'task': 'apps.parser_habr.tasks.collect_data_mel',
+        'task': 'apps.parser_tink.tasks.collect_data_tinkoff',
         'schedule': crontab(minute='*/20'),
     },
 }
