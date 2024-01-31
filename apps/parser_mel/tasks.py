@@ -4,9 +4,8 @@ from .models import Category
 from apps.parser_mel.parser.parser_mel import ParserMel
 
 
-@app.task(name='create_task_mel', bind=True)
+@app.task(bind=True)
 def collect_data_mel(self):
-
     list_items = Category.objects.all().values('name_cat', 'link_cat')
     print(list_items)
     mel_pars = ParserMel()
