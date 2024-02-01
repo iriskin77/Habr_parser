@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     "rest_framework",
     'rest_framework.authtoken',
     'drf_yasg',
-    'djoser'
+    'djoser',
+    'django_prometheus'
 ]
 
 MIDDLEWARE = [
@@ -136,8 +137,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "/static/"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -176,6 +182,14 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication'
 
     ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '70/day',
+        'user': '150/day'
+    }
 }
 
 
