@@ -7,7 +7,7 @@ from rest_framework.generics import ListAPIView
 from celery.result import AsyncResult
 from .permissions import IsAdminOrReadOnly
 from .models import Hub, Author, Texts, Task
-from .serializer import TextsSerializer, Authorerializer, HubSerializer, TaskSerializer
+from .serializer import TextsSerializer, AuthorSerializer, HubSerializer, TaskSerializer
 from .tasks import collect_data_habr
 
 
@@ -31,7 +31,7 @@ class TextsViewSet(viewsets.ModelViewSet):
 class AuthorViewSet(viewsets.ModelViewSet):
 
     queryset = Author.objects.all()
-    serializer_class = Authorerializer
+    serializer_class = AuthorSerializer
     permission_classes = (IsAdminOrReadOnly, )
 
 
