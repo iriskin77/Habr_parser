@@ -21,6 +21,8 @@ from apps.parser_mel.urls import router as tink_router
 from apps.parser_tink.urls import router as mel_router
 from apps.parser_habr.urls import router as habr_router
 from .swagger import urlpatterns as swagger_urls
+from django.conf import settings
+from django.conf.urls.static import static
 
 router = routers.DefaultRouter()
 
@@ -36,5 +38,6 @@ urlpatterns = [
     path('api/v1/', include((router.urls, 'api'), namespace='api')),
     path('api/v1/', include(swagger_urls)),
     path(r'api/v1/auth/', include('djoser.urls')),
-    re_path(r'^auth/', include('djoser.urls.authtoken'))
+    re_path(r'^auth/', include('djoser.urls.authtoken')),
+    path('', include('django_prometheus.urls'))
 ]
