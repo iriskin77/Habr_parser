@@ -1,10 +1,10 @@
-+ [1. What is this??](##What is this?)
-+ [2. How it works](##How it works)
-  + [2.2. How parsers work](####2.2.-How-parsers-work)
-  + [2.2. How parsers work](####2.2.-How-parsers-work)
-  + [2.3. How to use](####2.3.-How-to-use)
-+ [3. How to install](##3.-How-to-install)
-+ [4. Notes ](##4.-Notes )
++ [1. What is this?](#what-is-this)
++ [2. How it works](#how-it-works)
+  + [2.2. How parsers work](#how-parsers-work)
+  + [2.2. How parsers work](#how-parsers-work)
+  + [2.3. How to use](#how-to-use)
++ [3. How to install](#how-to-install)
++ [4. Notes ](#notes )
 
 
 ## 1. What is this?
