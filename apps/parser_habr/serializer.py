@@ -3,14 +3,13 @@ from .models import Hub, Author, Texts, Task
 
 
 class TextsSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Texts
         fields = '__all__'
 
 
-class Authorerializer(serializers.ModelSerializer):
+class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Author

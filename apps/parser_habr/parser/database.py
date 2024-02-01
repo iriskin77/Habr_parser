@@ -34,7 +34,7 @@ class Database:
 
                 text_check = Texts.objects.filter(title=article['title']).exists()
 
-                if text_check == False:
+                if not text_check:
 
                     new_text = Texts.objects.create(
                                          hub=hub_name,
