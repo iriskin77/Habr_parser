@@ -18,9 +18,12 @@ click-plugins==1.1.1
 click-repl==0.3.0
 cryptography==42.0.2
 defusedxml==0.8.0rc2
+Deprecated==1.2.14
 dj-database-url==2.1.0
 Django==5.0
+django-oauth-toolkit==2.3.0
 django-prometheus==2.3.1
+django-rest-framework-social-oauth2==1.2.0
 django-templated-mail==1.1.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
@@ -32,6 +35,7 @@ frozenlist==1.4.1
 humanize==4.9.0
 idna==3.6
 inflection==0.5.1
+jwcrypto==1.5.1
 kombu==5.3.4
 lxml==4.9.3
 multidict==6.0.4
@@ -63,4 +67,5 @@ uritemplate==4.1.1
 urllib3==2.1.0
 vine==5.1.0
 wcwidth==0.2.12
+wrapt==1.16.0
 yarl==1.9.4

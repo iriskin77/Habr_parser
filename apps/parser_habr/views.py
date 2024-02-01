@@ -1,5 +1,6 @@
 import logging
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView
@@ -7,7 +8,7 @@ from celery.result import AsyncResult
 from .permissions import IsAdminOrReadOnly
 from .models import Hub, Author, Texts, Task
 from .serializer import TextsSerializer, Authorerializer, HubSerializer, TaskSerializer
-from .tasks import collect_data
+from .tasks import collect_data_habr
 
 
 logger = logging.getLogger('main')
@@ -38,11 +39,14 @@ class ListApiHub(ListAPIView):
 
     queryset = Hub.objects.all()
     serializer_class = HubSerializer
-    permission_classes = (IsAdminOrReadOnly, )
+    permission_classes = (IsAuthenticated, )
 
 
 @api_view(['POST'])
+@permission_classes([IsAdminOrReadOnly])
 def add_habr_category(request):
+
+    """"The func enables to add a new category into db"""""
 
     if request.method == 'POST':
         serialized_data = HubSerializer(data=request.data)
@@ -54,12 +58,15 @@ def add_habr_category(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAdminOrReadOnly])
 def parse_habr(request):
+
+    """"The func can run the parser manually, without cron celery"""""
 
     if request.method == 'POST':
 
         try:
-            collect_data.delay()
+            collect_data_habr.delay()
             task_id = Task.objects.all().last().id
             task_id_celery = Task.objects.all().last().celery_task_id
 
@@ -73,6 +80,8 @@ def parse_habr(request):
 
 @api_view(['GET'])
 def get_task_habr_info(request):
+
+    """"The func enables to get info about the running parser"""""
 
     if request.method == 'GET':
 

@@ -1,5 +1,5 @@
 import logging
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import viewsets
 from celery.result import AsyncResult
@@ -35,7 +35,10 @@ class CategoryApiList(ListAPIView):
 
 
 @api_view(['POST'])
+@permission_classes([IsAdminOrReadOnly])
 def add_mel_category(request):
+
+    """"The func enables to add a new category into db"""""
 
     if request.method == 'POST':
 
@@ -48,7 +51,10 @@ def add_mel_category(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAdminOrReadOnly])
 def parse_mel(request):
+
+    """"The func can run the parser manually, without cron celery"""""
 
     if request.method == 'POST':
 
@@ -67,6 +73,8 @@ def parse_mel(request):
 
 @api_view(['GET'])
 def get_task_info_mel(request):
+
+    """"The func enables to get info about the running parser"""""
 
     if request.method == 'GET':
 
