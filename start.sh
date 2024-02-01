@@ -3,6 +3,7 @@
 until python manage.py migrate
 do
     echo "Waiting for db to be ready..."
-    sleep 2
+    sleep 10
 done
-python manage.py runserver 0.0.0.0:1234
+python manage.py collectstatic --noinput
+gunicorn --bind 0.0.0.0:8080 parser.wsgi
