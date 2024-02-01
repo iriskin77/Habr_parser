@@ -6,10 +6,9 @@ services:
     volumes:
       - ./db.sqlite3:/parser/db.sqlite3
       - ./info.log:/parser/info.log
+      - static:/parser/static/
     links:
       - redis
-    ports:
-      - '1234:1234'
 
   celery-worker:
     build: .
@@ -69,3 +68,15 @@ services:
     volumes:
       - ./prometheus/prometheus.yml:/prometheus/prometheus.yml
 
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - static:/var/www/static
+    ports:
+      - "8080:80"
+    depends_on:
+      - web
+
+volumes:
+  static:
