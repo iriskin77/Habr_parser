@@ -22,6 +22,19 @@
 + tinkoff-journal https://journal.tinkoff.ru/
 
 
++ Python (3.11);
++ Django (Wev Framework);
++ PostgreSQL (database);
++ Redis (message broker for celery);
++ Celery (background tasks);
++ Flower (tracking background tasks);
++ logging (logging);
++ Promtheus (monitoring, metrics);
++ Docker and Docker Compose (containerization);
++ Gunicorn (WSGI HTTP Server);
++ Nginx (Web Server).
+
+
 ## <a id="title2">2. Как это работает?</a>
 
 #### <a id="title3">2.1. Как работает API</a>
