@@ -1,10 +1,10 @@
 + [1. What is this?](#1-what-is-this)
 + [2. How it works](#2-how-it-works)
-  + [2.1. How api works](#2.1-how api-works)
+  + [2.1. How api works](#2.1-how-api-works)
   + [2.2. How parsers work](#2.2-how-parsers-work)
   + [2.3. How to use](#2.3-how-to-use)
 + [3. How to install](#3-how-to-install)
-+ [4. Notes ](#4-notes )
++ [4. Notes ](#4-notes)
 
 
 ## 1. What is this?

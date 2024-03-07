@@ -112,10 +112,11 @@ else:
             "NAME": os.getenv('POSTGRES_DB', 'db'),
             "USER": os.getenv('POSTGRES_USER', 'postgres'),
             "PASSWORD": os.getenv('POSTGRES_PASSWORD', 'postgres'),
-            "HOST": os.getenv('POSTGRES_HOST', 'db'),
+            "HOST": os.getenv('POSTGRES_HOST', 'localhost'),
             "PORT": os.getenv('POSTGRES_PORT', 5432),
         }
     }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -190,11 +191,6 @@ CELERY_RESULT_SERIALIZER = "json"
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ),
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle'
@@ -205,19 +201,6 @@ REST_FRAMEWORK = {
     }
 }
 
-DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'SERIALIZERS': {},
-}
-
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_USE_TLS = True
 
 LOGGING = {
     "version": 1,
