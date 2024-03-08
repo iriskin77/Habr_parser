@@ -14,9 +14,8 @@ class Database:
 
         try:
             for article in json_articles['Hub_articles']:
-                author_check = Author.objects.filter(author=article['author']).exists()
-                if author_check == False:
-                    Author.objects.create(author=article['author'], author_link=article['author_link']).save()
+
+                Author.objects.create(author=article['author'], author_link=article['author_link']).save()
 
             self.logger.info(f'Fn {self.insert_authors.__name__}. Authors were inserted successfully')
         except Exception as ex:
@@ -32,11 +31,7 @@ class Database:
                 hub_name = Hub.objects.filter(hub_name=json_articles['Hub_name']).first()
                 author = Author.objects.filter(author=article['author']).first()
 
-                text_check = Texts.objects.filter(title=article['title']).exists()
-
-                if not text_check:
-
-                    new_text = Texts.objects.create(
+                new_text = Texts.objects.create(
                                          hub=hub_name,
                                          author=author,
                                          title=article['title'],
@@ -44,7 +39,7 @@ class Database:
                                          date=article['date'],
                                          link=article['link_article']
                     )
-                    new_text.save()
+                new_text.save()
             self.logger.info(f'Fn {self.insert_authors.__name__}. Articles were inserted successfully')
         except Exception as ex:
             self.logger.critical(f'Fn {self.insert_articles.__name__}. Failed to insert articles. Message: {ex}')

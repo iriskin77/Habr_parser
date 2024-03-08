@@ -14,18 +14,14 @@ class Database:
 
                 cat_name = Category.objects.filter(name_cat=json_articles['Mel_cat']).first()
 
-                article_check = Article.objects.filter(title=article['title']).exists()
-
-                if not article_check:
-
-                    new_text = Article.objects.create(
+                new_text = Article.objects.create(
                                          category=cat_name,
                                          title=article['title'],
                                          body=article['body'],
                                          date_published=article['date_published'],
                                          link=article['link_article']
                     )
-                    new_text.save()
+                new_text.save()
             self.logger.info(f'Fn insert_articles. Articles were inserted successfully')
         except:
             self.logger.info(f'Fn insert_articles has finished incorrectly')

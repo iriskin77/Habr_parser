@@ -1,11 +1,8 @@
 import logging
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import viewsets
-from rest_framework.generics import ListAPIView
+from rest_framework import generics
 from celery.result import AsyncResult
-from .permissions import IsAdminOrReadOnly
 from .models import Hub, Author, Texts, Task
 from .serializer import TextsSerializer, AuthorSerializer, HubSerializer, TaskSerializer
 from .tasks import collect_data_habr
@@ -14,51 +11,55 @@ from .tasks import collect_data_habr
 logger = logging.getLogger('main')
 
 
-class TaskViewSet(viewsets.ModelViewSet):
+class TaskViewSet(generics.ListAPIView):
 
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = (IsAdminOrReadOnly, )
 
 
-class TextsViewSet(viewsets.ModelViewSet):
+class TextsViewSet(generics.ListAPIView):
 
     queryset = Texts.objects.all()
     serializer_class = TextsSerializer
-    permission_classes = (IsAdminOrReadOnly, )
 
 
-class AuthorViewSet(viewsets.ModelViewSet):
+class AuthorViewSet(generics.ListAPIView):
 
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
-    permission_classes = (IsAdminOrReadOnly, )
 
 
-class ListApiHub(ListAPIView):
+class ListApiHub(generics.ListAPIView):
 
     queryset = Hub.objects.all()
     serializer_class = HubSerializer
-    permission_classes = (IsAuthenticated, )
+
+
+class AddCategory(generics.ListCreateAPIView):
+
+    queryset = Hub.objects.all()
+    serializer_class = HubSerializer
+
+
+class TaskHabrInfo(generics.RetrieveAPIView):
+
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+    def get_object(self):
+        celery_task_id = Task.objects.all().last().celery_task_id
+        task_id = Task.objects.filter(celery_task_id=celery_task_id).first().id
+        task_result = AsyncResult(str(task_id))
+        result = {
+            "task_id": task_id,
+            "celery_task_id": celery_task_id,
+            "task_status": task_result.status,
+            "task_result": task_result.result
+        }
+        return result
 
 
 @api_view(['POST'])
-@permission_classes([IsAdminOrReadOnly])
-def add_habr_category(request):
-
-    """"The func enables to add a new category into db"""""
-
-    if request.method == 'POST':
-        serialized_data = HubSerializer(data=request.data)
-        if serialized_data.is_valid():
-            serialized_data.save()
-            return Response({'status': 201, 'data': serialized_data.data})
-        else:
-            return Response({'error': serialized_data.errors})
-
-
-@api_view(['POST'])
-@permission_classes([IsAdminOrReadOnly])
 def parse_habr(request):
 
     """"The func can run the parser manually, without cron celery"""""
@@ -76,26 +77,4 @@ def parse_habr(request):
             return Response({'Internal Server Error': 500, 'Error': str(ex)})
     else:
         return Response({'This method is not allowed': 405})
-
-
-@api_view(['GET'])
-def get_task_habr_info(request):
-
-    """"The func enables to get info about the running parser"""""
-
-    if request.method == 'GET':
-
-        celery_task_id = Task.objects.all().last().celery_task_id
-        task_id = Task.objects.filter(celery_task_id=celery_task_id).first().id
-        task_result = AsyncResult(str(task_id))
-        result = {
-            "task_id": task_id,
-            "celery_task_id": celery_task_id,
-            "task_status": task_result.status,
-            "task_result": task_result.result
-        }
-        return Response(result)
-    else:
-        return Response({"This method is not allowed": 405})
-
 

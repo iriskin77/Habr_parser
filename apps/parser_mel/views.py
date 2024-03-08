@@ -1,10 +1,8 @@
 import logging
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import viewsets
+from rest_framework import generics
 from celery.result import AsyncResult
-from rest_framework.generics import ListAPIView
-from .permissions import IsAdminOrReadOnly
 from .models import Category, Article, Task
 from .serializers import ArticlesSerializer, CategorySerializer, TaskSerializer
 from .tasks import collect_data_mel
@@ -13,29 +11,25 @@ from .tasks import collect_data_mel
 logger = logging.getLogger('main')
 
 
-class TaskViewSet(viewsets.ModelViewSet):
+class TaskViewSet(generics.ListAPIView):
 
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = (IsAdminOrReadOnly, )
 
 
-class ArticleViewSet(viewsets.ModelViewSet):
+class ArticleViewSet(generics.ListAPIView):
 
     queryset = Article.objects.all()
     serializer_class = ArticlesSerializer
-    permission_classes = (IsAdminOrReadOnly, )
 
 
-class CategoryApiList(ListAPIView):
+class CategoryApiList(generics.ListAPIView):
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (IsAdminOrReadOnly, )
 
 
 @api_view(['POST'])
-@permission_classes([IsAdminOrReadOnly])
 def add_mel_category(request):
 
     """"The func enables to add a new category into db"""""
@@ -51,7 +45,6 @@ def add_mel_category(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAdminOrReadOnly])
 def parse_mel(request):
 
     """"The func can run the parser manually, without cron celery"""""

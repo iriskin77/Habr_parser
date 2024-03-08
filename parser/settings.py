@@ -51,15 +51,8 @@ INSTALLED_APPS = [
     "apps.parser_mel",
 
     "rest_framework",
-    'drf_yasg',
-
+    'drf_spectacular',
     'django_prometheus',
-
-    'djoser',
-    'rest_framework.authtoken',
-    'oauth2_provider',
-    'social_django',
-    'rest_framework_social_oauth2'
 ]
 
 MIDDLEWARE = [
@@ -198,7 +191,8 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '70/day',
         'user': '150/day'
-    }
+    },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
 }
 
 

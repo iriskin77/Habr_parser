@@ -1,46 +1,42 @@
 import logging
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import viewsets
 from celery.result import AsyncResult
-from .permissions import IsAdminOrReadOnly, IsAdminOrReadPostOnly
 from .models import Category, Author, Article, Task
-from .serializers import ArticlesSerializer, AuthorSerializer, CategorySerializer, TaskSerializer
+from .serializers import ArticlesSerializer, CategorySerializer, TaskSerializer, AuthorSerializer
 from .tasks import collect_data_tinkoff
-from rest_framework.generics import ListAPIView
+from rest_framework import generics
+
 
 logger = logging.getLogger('main')
 
 
-class TaskViewSet(viewsets.ModelViewSet):
+class TaskViewSet(generics.ListAPIView):
 
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = (IsAdminOrReadOnly, )
 
 
-class ArticleViewSet(viewsets.ModelViewSet):
+class ArticleViewSet(generics.ListAPIView):
 
     queryset = Article.objects.all()
     serializer_class = ArticlesSerializer
-    permission_classes = (IsAdminOrReadOnly, )
 
 
-class AuthorViewSet(viewsets.ModelViewSet):
+class AuthorViewSet(generics.ListAPIView):
 
     queryset = Author.objects.all()
-    serializer_class = ArticlesSerializer
-    permission_classes = (IsAdminOrReadOnly, )
+    serializer_class = AuthorSerializer
 
 
-class CategoryApiList(ListAPIView):
+class CategoryApiList(generics.ListAPIView):
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 
 @api_view(['POST'])
-@permission_classes([IsAdminOrReadOnly])
 def add_tink_category(request):
 
     """"The func enables to add a new category into db"""""
@@ -58,7 +54,6 @@ def add_tink_category(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAdminOrReadOnly])
 def parse_tink(request):
 
     """"The func can run the parser manually, without cron celery"""""

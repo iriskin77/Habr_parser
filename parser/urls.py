@@ -16,19 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
-from apps.parser_mel.urls import router as tink_router
-from apps.parser_tink.urls import router as mel_router
-from apps.parser_habr.urls import router as habr_router
-from .swagger import urlpatterns as swagger_urls
+#from apps.parser_mel.urls import router as tink_router
+#from apps.parser_tink.urls import router as mel_router
+#from apps.parser_habr.urls import router as habr_router
+#from .swagger import urlpatterns as swagger_urls
 from django.conf import settings
 from django.conf.urls.static import static
+#from .swagger import urlpatterns as doc_urls
+
 
 router = routers.DefaultRouter()
 
-router.registry.extend(tink_router.registry)
-router.registry.extend(mel_router.registry)
-router.registry.extend(habr_router.registry)
+#router.registry.extend(tink_router.registry)
+#router.registry.extend(mel_router.registry)
+#router.registry.extend(habr_router.registry)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -36,8 +39,17 @@ urlpatterns = [
     path('api/v1/', include('apps.parser_tink.urls')),
     path('api/v1/', include('apps.parser_mel.urls')),
     path('api/v1/', include((router.urls, 'api'), namespace='api')),
-    path('api/v1/', include(swagger_urls)),
-    path(r'api/v1/auth/', include('djoser.urls')),
-    re_path(r'^auth/', include('djoser.urls.authtoken')),
-    path('', include('django_prometheus.urls'))
+    #path('api/v1/', include(swagger_urls)),
+    #path(r'api/v1/auth/', include('djoser.urls')),
+    #re_path(r'^auth/', include('djoser.urls.authtoken')),
+    path('', include('django_prometheus.urls')),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs')
+
 ]
+
+#urlpatterns += doc_urls
+
+
+
+
