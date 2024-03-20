@@ -70,8 +70,10 @@ def parse_habr(request):
             collect_data_habr.delay()
             task_id = Task.objects.all().last().id
             task_id_celery = Task.objects.all().last().celery_task_id
-
-            return Response({'Task was created': 200, 'Task_id': task_id, 'Task_id_celery': task_id_celery})
+            # 'Task_id': task_id, 'Task_id_celery': task_id_celery
+            return Response({'Task was created': 200,
+                             'Task_id': task_id,
+                             'Task_id_celery': task_id_celery})
 
         except Exception as ex:
             return Response({'Internal Server Error': 500, 'Error': str(ex)})

@@ -27,12 +27,12 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-env_debug = os.getenv('DEBUG', 'False')
-if env_debug == 'False':
-    DEBUG = False
-else:
-    DEBUG = True
-
+# env_debug = os.getenv('DEBUG', 'False')
+# if env_debug == 'False':
+#     DEBUG = False
+# else:
+#     DEBUG = True
+DEBUG = os.getenv('DEBUG'),
 ALLOWED_HOSTS = ['*']
 
 
@@ -91,25 +91,25 @@ WSGI_APPLICATION = "parser.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
 if DEBUG:
     DATABASES = {
         "default": {
-            "ENGINE": "django_prometheus.db.backends.sqlite3",
+            "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 else:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv('POSTGRES_DB', 'db'),
-            "USER": os.getenv('POSTGRES_USER', 'postgres'),
-            "PASSWORD": os.getenv('POSTGRES_PASSWORD', 'postgres'),
-            "HOST": os.getenv('POSTGRES_HOST', 'localhost'),
-            "PORT": os.getenv('POSTGRES_PORT', 5432),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv('POSTGRES_DB', 'db'),
+        "USER": os.getenv('POSTGRES_USER', 'postgres'),
+        "PASSWORD": os.getenv('POSTGRES_PASSWORD', 'postgres'),
+        "HOST": os.getenv('POSTGRES_HOST', 'db'),
+        "PORT": os.getenv('POSTGRES_PORT', 5432),
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

@@ -63,9 +63,10 @@ def parse_tink(request):
 
         try:
             collect_data_tinkoff.delay()
-            task_id = Task.objects.all().last().id
-            task_id_celery = Task.objects.all().last().celery_task_id
-            return Response({'Task was created': 201, 'Task_id': task_id, 'Task_id_celery': task_id_celery})
+            #task_id = Task.objects.all().last().id
+            #task_id_celery = Task.objects.all().last().celery_task_id
+            #'Task_id': task_id, 'Task_id_celery': task_id_celery
+            return Response({'Task was created': 201})
 
         except Exception as ex:
 

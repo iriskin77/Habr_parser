@@ -11,11 +11,12 @@ class Database:
         """"Input: json with all articles from a hub. Output: the function inserts author-name and author-link in db"""""
 
         self.logger.info(f'Fn {self.insert_authors.__name__} has started')
-
         try:
             for article in json_articles['Hub_articles']:
-
-                Author.objects.create(author=article['author'], author_link=article['author_link']).save()
+                print('insert_authors', article['author'])
+                author_check = Author.objects.filter(author=article['author']).exists()
+                if not author_check:
+                    Author.objects.create(author=article['author'], author_link=article['author_link']).save()
 
             self.logger.info(f'Fn {self.insert_authors.__name__}. Authors were inserted successfully')
         except Exception as ex:
@@ -28,18 +29,21 @@ class Database:
         try:
             for article in json_articles['Hub_articles']:
 
-                hub_name = Hub.objects.filter(hub_name=json_articles['Hub_name']).first()
-                author = Author.objects.filter(author=article['author']).first()
+                text_check = Texts.objects.filter(title=article['title']).exists()
 
-                new_text = Texts.objects.create(
+                if not text_check:
+
+                    hub_name = Hub.objects.filter(hub_name=json_articles['Hub_name']).first()
+                    author = Author.objects.filter(author=article['author']).first()
+
+                    Texts.objects.create(
                                          hub=hub_name,
                                          author=author,
                                          title=article['title'],
                                          text=article['text'],
                                          date=article['date'],
-                                         link=article['link_article']
-                    )
-                new_text.save()
+                                         link=article['link_article']).save()
+
             self.logger.info(f'Fn {self.insert_authors.__name__}. Articles were inserted successfully')
         except Exception as ex:
             self.logger.critical(f'Fn {self.insert_articles.__name__}. Failed to insert articles. Message: {ex}')

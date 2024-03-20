@@ -4,7 +4,7 @@ services:
   web:
     build: .
     volumes:
-      - ./db.sqlite3:/parser/db.sqlite3
+      #- ./db.sqlite3:/parser/db.sqlite3
       - ./info.log:/parser/info.log
       - static:/parser/static/
     links:
@@ -21,7 +21,7 @@ services:
     env_file:
       - .env
     ports:
-      - "5234:5432"
+      - "4889:5432"
     networks:
       - custom
 

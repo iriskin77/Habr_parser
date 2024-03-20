@@ -67,8 +67,8 @@ class Parser:
                     tasks.append(task)
                 await asyncio.gather(*tasks)
 
-    def __call__(self, celery_task_id: str, list_hubs: str) -> None:
-        new_task = Task.objects.create(celery_task_id=celery_task_id)
+    def __call__(self, list_hubs: str) -> None:
+        #new_task = Task.objects.create(celery_task_id=celery_task_id)
         print('list_hubs', list_hubs)
         print('list_hubs', list(list_hubs))
         for item in list(list_hubs):
@@ -81,6 +81,6 @@ class Parser:
             # insert into db
             self.db.insert_authors(self.tink_dict)
             self.db.insert_articles(self.tink_dict)
-        new_task.is_success = True
-        new_task.save()
+        #new_task.is_success = True
+        #new_task.save()
 

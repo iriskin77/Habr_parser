@@ -1,3 +1,4 @@
+import json
 import logging
 import requests
 import aiohttp
@@ -60,7 +61,7 @@ class ParserHub:
                     title = soup.find('h1', class_="tm-title tm-title_h1").get_text(strip=True)
                     text = soup.find('div', class_="tm-article-body").text
                     date = soup.find('span', class_="tm-article-datetime-published").find("time")["title"]
-
+                    print('get_info_article', author)
                     self.hub_dict['Hub_articles'].append({
                         'author': author,
                         'author_link': author_link,
@@ -94,7 +95,7 @@ class ParserHub:
         except Exception as ex:
             self.logger.info(f'Fn {self.collect_info_articles.__name__}. Failed to collect info from articles of a hub. Message: {ex}')
 
-    def __call__(self, celery_task_id: str, list_hubs: str) -> None:
+    def __call__(self, celery_task_id, list_hubs: str) -> None:
         new_task = Task.objects.create(celery_task_id=celery_task_id)
         for hub_item in list(list_hubs):
             name = hub_item['hub_name']
@@ -103,12 +104,10 @@ class ParserHub:
             # we collect all articles from a hub and put them in json
             links_pages = self.get_links_article(url_hub=link, headers=self.head)
             asyncio.run(self.collect_info_articles(lst_links=links_pages, hub_name=name, hub_link=link, headers=self.head))
-            print(self.hub_dict)
+
+            #print(self.hub_dict)
             # insert into db
             self.db.insert_authors(self.hub_dict)
             self.db.insert_articles(self.hub_dict)
         new_task.is_success = True
         new_task.save()
-
-
-

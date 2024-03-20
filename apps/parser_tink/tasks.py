@@ -7,5 +7,6 @@ from .models import Category
 def collect_data_tinkoff(self):
     list_hubs = Category.objects.all().values('name_cat', 'link_cat')
     pars = Parser()
-    pars(celery_task_id=self.request.id, list_hubs=list_hubs)
+    print('collect_data_tinkoff', list_hubs)
+    pars(list_hubs=list_hubs)
     return True
